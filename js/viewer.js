@@ -13,10 +13,10 @@ let globalSkinId
 async function viewer(plannerId) {
   console.log(plannerId)
   const viewerFullImage = document.querySelector(".full-image img")
- 
+
 
   const viewerIconClone = document.querySelector(".viewer-icon img")
-  
+
 
   const viewer = document.querySelector(".viewer")
   viewer.style.display = "block"
@@ -28,10 +28,35 @@ async function viewer(plannerId) {
   const plannerSkinsData = await plannerSkinsCall.json()
 
   plannerSkinsData.forEach(plannerSkin => {
-    if (plannerId !== plannerSkin.plannerId) return 
+    if (plannerId !== plannerSkin.plannerId) return
     if (plannerId == plannerSkin.plannerId) {
       viewerIconClone.src = "https://raw.githubusercontent.com/HermitzPlanner/operator-icon/main/e0/" + plannerSkin.operator + ".png"
-      viewerFullImage.src = "https://raw.githubusercontent.com/HermitzPlanner/operator-art/main/e2/" + plannerSkin.operator + ".png"
+      //viewerFullImage.src = "https://raw.githubusercontent.com/HermitzPlanner/operator-art/main/e2/" + plannerSkin.operator + ".png"
+
+
+      // Create an Image object to test if the URL is valid
+      const testImage = new Image();
+      const baseImageUrl = "https://raw.githubusercontent.com/HermitzPlanner/operator-art/main/";
+      const operatorName = plannerSkin.operator;
+
+      // Define the full image and fallback image URLs
+      const fullImageUrl = `${baseImageUrl}e2/${operatorName}.png`;
+      const fallbackImageUrl = `${baseImageUrl}e0/${operatorName}.png`;
+
+      // Set up the onload and onerror event handlers
+      testImage.onload = function () {
+        // If the full image is valid, set it as the viewer's src
+        viewerFullImage.src = fullImageUrl;
+      };
+
+      testImage.onerror = function () {
+        // If the full image is not valid, use the fallback image
+        viewerFullImage.src = fallbackImageUrl;
+      };
+
+      // Attempt to load the full image
+      testImage.src = fullImageUrl;
+
     }
     // if (plannerSkinsData.appearances !== "") {
     //   document.querySelector(".viewer-appearances ").style.display = "flex"
